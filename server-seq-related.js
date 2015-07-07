@@ -43,43 +43,10 @@ app.get('/search/:name', function(req, res) {
         relatedReq = getFromApi('artists/'+artistID+'/related-artists', {});
 
         // GET https://api.spotify.com/v1/artists/{id}/related-artists
-        relatedReq.on('end', function(relatedItem) {
+        relatedReq.on('end', function(item) {
             console.log('Related request end');
-            var numArtists = relatedItem.artists.length,
-              progress = 0;
-
-            function checkComplete() {
-              if(progress === numArtists) {
-                console.log('requests complete!');
-                artist.related = relatedItem.artists;
-                res.json(artist);
-                return;
-              }
-            }
-
-            //GET https://api.spotify.com/v1/artists/{id}/top-tracks?country=US
-            function makeTopTrackRequest(artistObj) {
-              var topTrackReq = getFromApi('artists/'+artistObj.id+'/top-tracks', {
-                country: 'US'
-              });
-
-              topTrackReq.on('end', function(toptracksItem) {
-                console.log('Top track request end');
-                artistObj.tracks = toptracksItem.tracks;
-                progress++;
-                checkComplete();
-              });
-
-              topTrackReq.on('error', function() {
-                 console.log('TOPTRACK REQ ERROR - 404');
-                 res.sendStatus(404);
-              });
-            }
-
-            relatedItem.artists.forEach(function (artist) {
-                makeTopTrackRequest(artist);
-            });
-
+            artist.related = item.artists;
+            res.json(artist);
         });
 
         relatedReq.on('error', function() {
