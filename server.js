@@ -7,6 +7,7 @@ var getFromApi = function(endpoint, args) {
     unirest.get('https://api.spotify.com/v1/' + endpoint)
            .qs(args)
            .end(function(response) {
+               console.log('end')
                emitter.emit('end', response.body);
             });
     return emitter;
@@ -31,6 +32,7 @@ app.get('/search/:name', function(req, res) {
     });
 
     searchReq.on('error', function() {
+       console.log('error - 404');
         res.sendStatus(404);
     });
 });

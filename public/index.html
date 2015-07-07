@@ -114,6 +114,7 @@ Spotify.prototype.onSearchClicked = function() {
 };
 
 Spotify.prototype.search = function(name) {
+    // console.log('search press',name);
     var ajax = $.ajax('/search/' + name, {
         type: 'GET',
         dataType: 'json'
